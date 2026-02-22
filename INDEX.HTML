@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confesiones Anónimas - Consejo de Medellín</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .qr-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .qr-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .share-link {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            word-break: break-all;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-button.active {
+            background: #00ffcc;
+            color: #333;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        button[type="submit"], .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button[type="submit"]:hover, .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .confession {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .confession-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .confession-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .confession-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .confession-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #5568d3;
+        }
+
+        .reply-form {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .reply-form.active {
+            display: block;
+        }
+
+        .reply-form textarea {
+            min-height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .replies-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .reply {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #00ffcc;
+        }
+
+        .reply-header {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .reply-text {
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .replies-count {
+            font-size: 0.9em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .poll-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .poll-option {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .poll-option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .poll-option input {
+            margin-right: 10px;
+        }
+
+        .poll-results {
+            margin-top: 20px;
+        }
+
+        .result-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .option-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .option-input-group input {
+            flex: 1;
+        }
+
+        .option-input-group button {
+            width: auto;
+            padding: 10px 20px;
+            background: #dc3545;
+        }
+
+        .add-option-btn {
+            width: auto;
+            padding: 10px 20px;
+            background: #28a745;
+            margin-top: 10px;
+        }
+
+        .vote-btn {
+            width: auto;
+            padding: 10px 30px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Confesiones Anónimas</h1>
+            <p>Consejo de Medellín - Comparte de forma anónima</p>
+        </header>
+
+        <!-- Sección QR -->
+        <div class="qr-section">
+            <h3>📱 Comparte esta página</h3>
+            <div id="qrcode"></div>
+            <div class="share-link" id="shareLink">Cargando enlace...</div>
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Escanea el código QR o comparte el enlace</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('enviar')">✍️ Confesión</button>
+            <button class="tab-button" onclick="switchTab('ver')">👀 Ver Confesiones</button>
+            <button class="tab-button" onclick="switchTab('crear-encuesta')">➕ Crear Encuesta</button>
+            <button class="tab-button" onclick="switchTab('encuestas')">📊 Encuestas</button>
+        </div>
+
+        <!-- Tab: Enviar Confesión -->
+        <div id="enviar" class="tab-content active">
+            <div class="card">
+                <h2 style="margin-bottom: 20px; color: #333;">Envía tu confesión anónima</h2>
+                <form id="confessionForm">
+                    <div class="form-group">
+                        <label>Categoría:</label>
+                        <select id="category" required>
+                            <option value="">Selecciona una categoría</option>
+                            <option value="Amor">💕 Amor</option>
+                            <option value="Crush">😍 Crush</option>
+                            <option value="Amistad">👥 Amistad</option>
+                            <option value="Secreto">🤫 Secreto</option>
+                            <option value="Consejo">💡 Consejo</option>
+                            <option value="Confesión">😅 Confesión</option>
+                            <option value="Chisme">🗣️ Chisme</option>
+                            <option value="Desahogo">😔 Desahogo</option>
+                            <option value="Agradecimiento">🙏 Agradecimiento</option>
+                            <option value="Queja">😤 Queja</option>
+                            <option value="Pregunta">❓ Pregunta</option>
+                            <option value="Humor">😂 Humor</option>
+                            <option value="Miedo">😨 Miedo</option>
+                            <option value="Sueño">💭 Sueño</option>
+                            <option value="Otro">📌 Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tu mensaje anónimo:</label>
+                        <textarea id="message" placeholder="Escribe aquí tu confesión de forma anónima..." required></textarea>
+                    </div>
+                    <button type="submit">Enviar Confesión 🚀</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tab: Ver Confesiones -->
+        <div id="ver" class="tab-content">
+            <div class="card">
+                <h2 style="margin-bottom: 20px; color: #333;">Confesiones recientes</h2>
+                <div class="form-group">
+                    <label>Filtrar por categoría:</label>
+                    <select id="filterCategory" onchange="loadConfessions()">
+                        <option value="">Todas las categorías</option>
+                        <option value="Amor">💕 Amor</option>
+                        <option value="Crush">😍 Crush</option>
+                        <option value="Amistad">👥 Amistad</option>
+                        <option value="Secreto">🤫 Secreto</option>
+                        <option value="Consejo">💡 Consejo</option>
+                        <option value="Confesión">😅 Confesión</option>
+                        <option value="Chisme">🗣️ Chisme</option>
+                        <option value="Desahogo">😔 Desahogo</option>
+                        <option value="Agradecimiento">🙏 Agradecimiento</option>
+                        <option value="Queja">😤 Queja</option>
+                        <option value="Pregunta">❓ Pregunta</option>
+                        <option value="Humor">😂 Humor</option>
+                        <option value="Miedo">😨 Miedo</option>
+                        <option value="Sueño">💭 Sueño</option>
+                        <option value="Otro">📌 Otro</option>
+                    </select>
+                </div>
+                <div id="confessionsList"></div>
+            </div>
+        </div>
+
+        <!-- Tab: Crear Encuesta -->
+        <div id="crear-encuesta" class="tab-content">
+            <div class="card">
+                <h2 style="margin-bottom: 20px; color: #333;">Crea tu propia encuesta</h2>
+                <form id="createPollForm">
+                    <div class="form-group">
+                        <label>Pregunta de la encuesta:</label>
+                        <input type="text" id="pollQuestion" placeholder="¿Cuál es tu...?" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Opciones de respuesta:</label>
+                        <div id="pollOptionsContainer">
+                            <div class="option-input-group">
+                                <input type="text" class="poll-option-input" placeholder="Opción 1" required>
+                            </div>
+                            <div class="option-input-group">
+                                <input type="text" class="poll-option-input" placeholder="Opción 2" required>
+                            </div>
+                        </div>
+                        <button type="button" class="btn add-option-btn" onclick="addPollOption()">+ Agregar opción</button>
+                    </div>
+                    <button type="submit">Crear Encuesta 🎯</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tab: Ver Encuestas -->
+        <div id="encuestas" class="tab-content">
+            <div class="card">
+                <h2 style="margin-bottom: 20px; color: #333;">Encuestas activas</h2>
+                <div id="pollsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librería para generar QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        // Generar código QR con la URL actual
+        window.addEventListener('load', function() {
+            const currentUrl = window.location.href;
+            document.getElementById('shareLink').textContent = currentUrl;
+            
+            new QRCode(document.getElementById("qrcode"), {
+                text: currentUrl,
+                width: 200,
+                height: 200,
+                colorDark: "#667eea",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        });
+
+        // Cambiar entre tabs
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'ver') {
+                loadConfessions();
+            } else if (tabName === 'encuestas') {
+                loadPolls();
+            }
+        }
+
+        // Enviar confesión
+        document.getElementById('confessionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const category = document.getElementById('category').value;
+            const message = document.getElementById('message').value;
+            
+            const confession = {
+                id: Date.now(),
+                category: category,
+                message: message,
+                date: new Date().toLocaleString('es-CO'),
+                replies: []
+            };
+            
+            let confessions = JSON.parse(localStorage.getItem('confessions') || '[]');
+            confessions.unshift(confession);
+            localStorage.setItem('confessions', JSON.stringify(confessions));
+            
+            alert('¡Tu confesión ha sido enviada de forma anónima! 🎉');
+            document.getElementById('confessionForm').reset();
+        });
+
+        // Mostrar/ocultar formulario de respuesta
+        function toggleReplyForm(confessionId) {
+            const form = document.getElementById(`reply-form-${confessionId}`);
+            form.classList.toggle('active');
+        }
+
+        // Mostrar/ocultar respuestas
+        function toggleReplies(confessionId) {
+            const section = document.getElementById(`replies-${confessionId}`);
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Enviar respuesta
+        function submitReply(confessionId) {
+            const textarea = document.getElementById(`reply-text-${confessionId}`);
+            const replyText = textarea.value.trim();
+            
+            if (!replyText) {
+                alert('Escribe una respuesta');
+                return;
+            }
+            
+            let confessions = JSON.parse(localStorage.getItem('confessions') || '[]');
+            const confession = confessions.find(c => c.id === confessionId);
+            
+            if (confession) {
+                if (!confession.replies) confession.replies = [];
+                
+                confession.replies.push({
+                    id: Date.now(),
+                    text: replyText,
+                    date: new Date().toLocaleString('es-CO')
+                });
+                
+                localStorage.setItem('confessions', JSON.stringify(confessions));
+                textarea.value = '';
+                loadConfessions();
+                alert('¡Respuesta enviada! 💬');
+            }
+        }
+
+        // Cargar confesiones con filtro
+        function loadConfessions() {
+            const confessions = JSON.parse(localStorage.getItem('confessions') || '[]');
+            const container = document.getElementById('confessionsList');
+            const filter = document.getElementById('filterCategory').value;
+            
+            const filtered = filter ? confessions.filter(c => c.category === filter) : confessions;
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>😔 No hay confesiones en esta categoría. ¡Sé el primero en compartir!</p></div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(conf => {
+                const repliesCount = (conf.replies || []).length;
+                const repliesHtml = (conf.replies || []).map(reply => `
+                    <div class="reply">
+                        <div class="reply-header">Anónimo • ${reply.date}</div>
+                        <div class="reply-text">${reply.text}</div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="confession">
+                        <div class="confession-header">
+                            <span class="confession-category">${conf.category}</span>
+                            <span>${conf.date}</span>
+                        </div>
+                        <div class="confession-text">${conf.message}</div>
+                        
+                        <div class="confession-actions">
+                            <button class="action-btn" onclick="toggleReplyForm(${conf.id})">💬 Responder</button>
+                            ${repliesCount > 0 ? `<button class="action-btn" onclick="toggleReplies(${conf.id})">👁️ Ver respuestas (${repliesCount})</button>` : ''}
+                        </div>
+                        
+                        <div class="reply-form" id="reply-form-${conf.id}">
+                            <textarea id="reply-text-${conf.id}" placeholder="Escribe tu respuesta anónima..."></textarea>
+                            <button class="action-btn" onclick="submitReply(${conf.id})">Enviar respuesta 🚀</button>
+                        </div>
+                        
+                        ${repliesCount > 0 ? `
+                            <div class="replies-section" id="replies-${conf.id}" style="display: none;">
+                                <div class="replies-count">${repliesCount} respuesta${repliesCount > 1 ? 's' : ''}:</div>
+                                ${repliesHtml}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Agregar opción a encuesta
+        function addPollOption() {
+            const container = document.getElementById('pollOptionsContainer');
+            const optionCount = container.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'option-input-group';
+            div.innerHTML = `
+                <input type="text" class="poll-option-input" placeholder="Opción ${optionCount}" required>
+                <button type="button" class="btn" onclick="this.parentElement.remove()" style="background: #dc3545;">✕</button>
+            `;
+            container.appendChild(div);
+        }
+
+        // Crear encuesta
+        document.getElementById('createPollForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const question = document.getElementById('pollQuestion').value;
+            const optionInputs = document.querySelectorAll('.poll-option-input');
+            const options = Array.from(optionInputs).map(input => input.value).filter(val => val.trim() !== '');
+            
+            if (options.length < 2) {
+                alert('Debes agregar al menos 2 opciones');
+                return;
+            }
+            
+            const poll = {
+                id: Date.now(),
+                question: question,
+                options: options,
+                votes: {},
+                date: new Date().toLocaleString('es-CO')
+            };
+            
+            options.forEach(opt => poll.votes[opt] = 0);
+            
+            let polls = JSON.parse(localStorage.getItem('polls') || '[]');
+            polls.unshift(poll);
+            localStorage.setItem('polls', JSON.stringify(polls));
+            
+            alert('¡Encuesta creada exitosamente! 🎉');
+            document.getElementById('createPollForm').reset();
+            document.getElementById('pollOptionsContainer').innerHTML = `
+                <div class="option-input-group">
+                    <input type="text" class="poll-option-input" placeholder="Opción 1" required>
+                </div>
+                <div class="option-input-group">
+                    <input type="text" class="poll-option-input" placeholder="Opción 2" required>
+                </div>
+            `;
+        });
+
+        // Cargar encuestas
+        function loadPolls() {
+            const polls = JSON.parse(localStorage.getItem('polls') || '[]');
+            const container = document.getElementById('pollsList');
+            
+            if (polls.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>📊 No hay encuestas aún. ¡Crea la primera!</p></div>';
+                return;
+            }
+            
+            container.innerHTML = polls.map(poll => {
+                const hasVoted = localStorage.getItem(`voted_${poll.id}`);
+                const total = Object.values(poll.votes).reduce((a, b) => a + b, 0);
+                
+                if (hasVoted) {
+                    return `
+                        <div class="poll-card">
+                            <h3 style="color: #333; margin-bottom: 15px;">${poll.question}</h3>
+                            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Publicada: ${poll.date}</p>
+                            <div class="poll-results">
+                                <h4 style="margin-bottom: 10px; color: #333;">Resultados (${total} votos):</h4>
+                                ${poll.options.map(opt => {
+                                    const count = poll.votes[opt] || 0;
+                                    const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+                                    return `
+                                        <div class="result-bar">
+                                            <div class="result-fill" style="width: ${percentage}%">
+                                                ${opt}: ${percentage}% (${count})
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="poll-card">
+                            <h3 style="color: #333; margin-bottom: 15px;">${poll.question}</h3>
+                            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Publicada: ${poll.date}</p>
+                            <form onsubmit="votePoll(event, ${poll.id})">
+                                ${poll.options.map((opt, idx) => `
+                                    <div class="poll-option">
+                                        <input type="radio" name="poll_${poll.id}" value="${opt}" id="poll_${poll.id}_opt${idx}" required>
+                                        <label for="poll_${poll.id}_opt${idx}" style="display: inline; cursor: pointer;">${opt}</label>
+                                    </div>
+                                `).join('')}
+                                <button type="submit" class="btn vote-btn">Votar 🗳️</button>
+                            </form>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        // Votar en encuesta
+        function votePoll(event, pollId) {
+            event.preventDefault();
+            
+            const selected = document.querySelector(`input[name="poll_${pollId}"]:checked`).value;
+            
+            let polls = JSON.parse(localStorage.getItem('polls') || '[]');
+            const poll = polls.find(p => p.id === pollId);
+            
+            if (poll) {
+                poll.votes[selected] = (poll.votes[selected] || 0) + 1;
+                localStorage.setItem('polls', JSON.stringify(polls));
+                localStorage.setItem(`voted_${pollId}`, 'true');
+                loadPolls();
+            }
+        }
+    </script>
+</body>
+</html>
